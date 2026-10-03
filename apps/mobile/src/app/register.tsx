@@ -7,6 +7,7 @@ import { emitChange, onDataChange } from '@/data/events';
 import * as q from '@/data/queries';
 import { putRecord } from '@/data/sync';
 import { supabase } from '@/lib/supabase';
+import { isDemo } from '@/data/demo';
 
 const METHOD_LABEL: Record<string, string> = { punch: 'scan', auto: 'auto', manual: 'manual' };
 const STATUSES: AttendanceStatus[] = ['present', 'late', 'absent', 'excused'];
@@ -69,10 +70,15 @@ function MarkModal({ session, studentId, onClose }: { session: Session; studentI
   const [busy, setBusy] = useState(false);
 
   async function save() {
-    const { data: auth } = await supabase.auth.getUser();
-    const actor = { userId: auth.user?.id ?? '', role: q.role() as Role, batchIds: q.batches().filter((b) => b.teacherId === auth.user?.id).map((b) => b.id) };
+    const userId = isDemo() ? 'demo' : ((await supabase.auth.getUser()).data.user?.id ?? '');
+    const actor = { userId, role: q.role() as Role, batchIds: q.batches().filter((b) => b.teacherId === userId).map((b) => b.id) };
     const result = manualMark(session, studentId, status, reason, actor);
     if (!result.ok) return setError(result.error === 'reason_required' ? 'Please give a reason.' : "You can't mark this class.");
+    if (isDemo()) {
+      putRecord(fromRecord(result.record));
+      emitChange('changed');
+      return onClose();
+    }
     setBusy(true);
     // Manual changes need the server: they are locked and audited (M-40, X-05).
     const row = { ...fromRecord(result.record), marked_by: actor.userId };

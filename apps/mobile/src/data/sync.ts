@@ -1,6 +1,5 @@
 // Pull what attendance needs into the offline cache, and push queued check-ins
 // to the server, which re-runs the rules as the source of truth (spec §11).
-import * as SecureStore from 'expo-secure-store';
 import Constants from 'expo-constants';
 import {
   addDays,
@@ -11,11 +10,14 @@ import {
   toSchedule,
   type Row,
 } from '@kfa/core';
+import { setSecret } from '@/lib/secrets';
 import { supabase } from '@/lib/supabase';
+import { isDemo } from './demo';
+import { CARD_SECRET_KEY } from './keys';
 import { emitChange } from './events';
 import { getKv, markUploaded, pendingPunches, put, recordId, replaceAll, setKv } from './local';
 
-export const CARD_SECRET_KEY = 'kfa_card_secret';
+export { CARD_SECRET_KEY };
 
 function rows(res: { data: unknown; error: { message: string } | null }): Row[] {
   if (res.error) throw new Error(res.error.message);
@@ -25,7 +27,7 @@ function rows(res: { data: unknown; error: { message: string } | null }): Row[] 
 /** Register this phone once; finalisation waits for every registered phone to sync (F-04). */
 export async function ensureDevice(name: string): Promise<string> {
   const existing = getKv('device_id');
-  if (existing) return existing;
+  if (existing || isDemo()) return existing ?? 'demo-phone';
   const { data: auth } = await supabase.auth.getUser();
   const { data, error } = await supabase
     .from('devices')
@@ -51,7 +53,7 @@ export async function pullAll(): Promise<void> {
 
   if (role !== 'teacher') {
     const secret = (await supabase.from('app_secrets').select('card_secret').eq('id', 1).maybeSingle()).data?.card_secret;
-    if (secret) await SecureStore.setItemAsync(CARD_SECRET_KEY, secret);
+    if (secret) await setSecret(CARD_SECRET_KEY, secret);
   }
 
   replaceAll('batch', rows(await supabase.from('batches').select('*').eq('active', true)));
@@ -120,6 +122,7 @@ let running: Promise<PushResult> | null = null;
 
 /** Push then pull. Concurrent calls share one run. */
 export function syncNow(): Promise<PushResult> {
+  if (isDemo()) return Promise.resolve({ uploaded: 0, clockDriftMs: null }); // Demo data stays on this device.
   running ??= (async () => {
     try {
       const result = await pushPunches();

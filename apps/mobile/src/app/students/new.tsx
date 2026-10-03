@@ -7,6 +7,10 @@ import { Button, Card, colors, Field, Pill, styles } from '@/components/ui';
 import * as q from '@/data/queries';
 import { syncNow } from '@/data/sync';
 import { supabase } from '@/lib/supabase';
+import * as Crypto from 'expo-crypto';
+import { isDemo } from '@/data/demo';
+import { put } from '@/data/local';
+import { emitChange } from '@/data/events';
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -50,8 +54,18 @@ export default function NewStudent() {
     if (minor && !f.guardian_name.trim()) return setError('A guardian is required for students under 18.');
     if (batchIds.length === 0) return setError('Choose at least one batch.');
 
-    setBusy(true);
     const now = new Date().toISOString();
+    if (isDemo()) {
+      const id = Crypto.randomUUID();
+      put('student', id, { id, ...f, full_name: f.full_name.trim(), date_of_birth: f.date_of_birth || null });
+      for (const batch_id of batchIds) {
+        put('enrolment', `${id}-${batch_id}`, { id: `${id}-${batch_id}`, student_id: id, batch_id, start_date: startDate, end_date: null, status: 'active', kind: trial ? 'trial' : 'regular' });
+      }
+      put('credential', `c-${id}`, { id: `c-${id}`, student_id: id, type: 'qr', value: '1', status: 'active' });
+      emitChange('changed');
+      return router.replace({ pathname: '/students/[id]', params: { id } });
+    }
+    setBusy(true);
     const digits = (v: string) => v.replace(/[^\d]/g, '') || null;
     const { data: student, error: e1 } = await supabase
       .from('students')

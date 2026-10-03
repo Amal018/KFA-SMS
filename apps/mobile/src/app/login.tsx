@@ -3,6 +3,7 @@ import { KeyboardAvoidingView, Platform, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { isConfigured, supabase } from '@/lib/supabase';
 import { Button, Card, colors, Field, styles } from '@/components/ui';
+import { startDemo } from '@/data/demo';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -35,6 +36,8 @@ export default function Login() {
             {error && <Text style={{ color: colors.error }}>{error}</Text>}
             <Button title="Sign in" onPress={signIn} busy={busy} disabled={!email || !password || !isConfigured} />
           </Card>
+          <Button title="Try with sample data (no server)" variant="secondary" onPress={() => startDemo()} />
+          <Text style={styles.muted}>Sample students and classes stay on this device only. Sign out to leave the demo.</Text>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

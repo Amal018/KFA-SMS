@@ -2,9 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Alert, ScrollView, Text, View } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import * as SecureStore from 'expo-secure-store';
 import QRCode from 'react-native-qrcode-svg';
-import NfcManager, { Ndef, NfcTech } from 'react-native-nfc-manager';
 import { cardPayload, normalizeUid, summarize } from '@kfa/core';
 import { Button, Card, colors, Pill, styles } from '@/components/ui';
 import { onDataChange } from '@/data/events';
@@ -12,6 +10,9 @@ import { getOne } from '@/data/local';
 import * as q from '@/data/queries';
 import { CARD_SECRET_KEY, syncNow } from '@/data/sync';
 import { supabase } from '@/lib/supabase';
+import { getSecret } from '@/lib/secrets';
+import { writeSticker } from '@/lib/nfc';
+import { isDemo } from '@/data/demo';
 
 export default function StudentProfile() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -25,7 +26,7 @@ export default function StudentProfile() {
   const creds = q.credentials().filter((c) => c.studentId === id && c.status === 'active');
   const qr = creds.find((c) => c.type === 'qr');
   const nfc = creds.find((c) => c.type === 'nfc');
-  const secret = SecureStore.getItem(CARD_SECRET_KEY);
+  const secret = getSecret(CARD_SECRET_KEY);
   const payload = qr && secret ? cardPayload(secret, id, Number(qr.value)) : null;
   const summary = summarize(
     q.records().filter((r) => r.studentId === id),
@@ -34,6 +35,7 @@ export default function StudentProfile() {
   const enrolments = q.enrolments().filter((e) => e.studentId === id);
 
   async function run(label: string, task: () => Promise<void>) {
+    if (isDemo()) return Alert.alert('Demo mode', 'Cards and stickers can be changed once the app is connected to the server.');
     setBusy(label);
     try {
       await task();
@@ -61,20 +63,10 @@ export default function StudentProfile() {
   const linkNfc = () =>
     run('nfc', async () => {
       if (!secret) throw new Error('Sync first so this phone has the card key.');
-      if (!(await NfcManager.isSupported())) throw new Error('This phone has no NFC.');
-      await NfcManager.start();
-      try {
-        await NfcManager.requestTechnology(NfcTech.Ndef, { alertMessage: 'Hold the sticker to the back of the phone' });
-        const tag = await NfcManager.getTag();
-        if (!tag?.id) throw new Error("Couldn't read the sticker.");
-        const bytes = Ndef.encodeMessage([Ndef.textRecord(cardPayload(secret, id, 1))]);
-        await NfcManager.ndefHandler.writeNdefMessage(bytes);
-        if (nfc) await supabase.from('credentials').update({ status: 'revoked', revoked_at: new Date().toISOString(), revoked_reason: 'Replaced' }).eq('id', nfc.id);
-        const { error } = await supabase.from('credentials').insert({ student_id: id, type: 'nfc', value: normalizeUid(tag.id) });
-        if (error) throw new Error(error.message.includes('credentials_nfc_uid') ? 'This sticker is already linked to someone.' : error.message);
-      } finally {
-        await NfcManager.cancelTechnologyRequest().catch(() => {});
-      }
+      const uid = normalizeUid(await writeSticker(cardPayload(secret, id, 1)));
+      if (nfc) await supabase.from('credentials').update({ status: 'revoked', revoked_at: new Date().toISOString(), revoked_reason: 'Replaced' }).eq('id', nfc.id);
+      const { error } = await supabase.from('credentials').insert({ student_id: id, type: 'nfc', value: uid });
+      if (error) throw new Error(error.message.includes('credentials_nfc_uid') ? 'This sticker is already linked to someone.' : error.message);
     });
 
   const unlinkNfc = () =>

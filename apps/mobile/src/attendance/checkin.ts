@@ -2,7 +2,6 @@
 // core rules against the offline cache for an instant result, queue the punch
 // for upload (spec §5, §6, D-01).
 import * as Crypto from 'expo-crypto';
-import * as SecureStore from 'expo-secure-store';
 import {
   fromRecord,
   identifyCredential,
@@ -17,6 +16,7 @@ import { emitChange } from '@/data/events';
 import { enqueuePunch, getKv, seenPunchIds } from '@/data/local';
 import * as q from '@/data/queries';
 import { CARD_SECRET_KEY, putRecord } from '@/data/sync';
+import { getSecret } from '@/lib/secrets';
 
 export type Tone = 'ok' | 'info' | 'warn' | 'error';
 
@@ -100,7 +100,7 @@ export function checkInStudent(
 
 /** QR card or NFC sticker check-in (M-10 to M-23). */
 export function checkInWithCard(scan: CredentialScan, photoUri: string | null): CheckinResult {
-  const secret = SecureStore.getItem(CARD_SECRET_KEY);
+  const secret = getSecret(CARD_SECRET_KEY);
   if (!secret) return { tone: 'error', title: 'Phone not set up', detail: 'Sync while online, then try again.' };
 
   const id = identifyCredential(scan, q.credentials(), secret);

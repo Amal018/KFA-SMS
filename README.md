@@ -22,6 +22,15 @@ or (coming next) **face recognition**.
 
 **Not yet:** face recognition (phase 3), fees, reports/exports, printable ID cards.
 
+## Try it on your computer (no server needed)
+
+```bash
+npm install
+npm --prefix apps/mobile run web:local
+```
+
+Open http://localhost:8082 and choose **Try with sample data**. Attendance mode has a demo panel to simulate students' QR cards. The browser preview has no NFC, and it uses browser storage instead of the phone's database.
+
 ## Setup
 
 ### 1. Run the checks locally

@@ -1,16 +1,17 @@
 // The door screen: the phone stands at the entrance, the front camera reads
 // QR cards and NFC listens in the background, all at once (APP-PLAN §3.5).
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
-import { useKeepAwake } from 'expo-keep-awake';
+import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import { CameraView, useCameraPermissions, type BarcodeScanningResult } from 'expo-camera';
-import NfcManager, { Ndef, NfcEvents, type TagEvent } from 'react-native-nfc-manager';
-import { settingsForBatch, type CredentialScan } from '@kfa/core';
+import { cardPayload, expectedStudents, settingsForBatch, type CredentialScan } from '@kfa/core';
 import { checkInWithCard, type CheckinResult, type Tone } from '@/attendance/checkin';
 import { Button, colors, styles as ui } from '@/components/ui';
 import * as q from '@/data/queries';
 import { syncNow } from '@/data/sync';
+import { DEMO_SECRET, isDemo } from '@/data/demo';
+import { startListening, stopListening, type NfcState } from '@/lib/nfc';
 
 const RESULT_MS = 3500;
 const SAME_CARD_COOLDOWN_MS = 6000;
@@ -31,21 +32,24 @@ function photoWanted(): boolean {
     .some((s) => settingsForBatch(settings, batches.find((b) => b.id === s.batchId)).cardCheckLevel !== 'card_only');
 }
 
-function textFromTag(tag: TagEvent): string | null {
-  const record = tag.ndefMessage?.[0];
-  if (!record) return null;
-  try {
-    return Ndef.text.decodePayload(Uint8Array.from(record.payload));
-  } catch {
-    return null;
-  }
+const KEEP_AWAKE_TAG = 'attendance-mode';
+
+/** Keep the door phone's screen on. Browsers (the web preview) don't support it reliably. */
+function useKeepScreenOn() {
+  useEffect(() => {
+    if (Platform.OS === 'web') return;
+    activateKeepAwakeAsync(KEEP_AWAKE_TAG).catch(() => {});
+    return () => {
+      deactivateKeepAwake(KEEP_AWAKE_TAG).catch(() => {});
+    };
+  }, []);
 }
 
 export default function Attendance() {
-  useKeepAwake();
+  useKeepScreenOn();
   const [permission, requestPermission] = useCameraPermissions();
   const [result, setResult] = useState<CheckinResult | null>(null);
-  const [nfcState, setNfcState] = useState<'checking' | 'on' | 'off' | 'unsupported'>('checking');
+  const [nfcState, setNfcState] = useState<NfcState | 'checking'>('checking');
   const camera = useRef<CameraView>(null);
   const cameraReady = useRef(false);
   const busy = useRef(false);
@@ -80,27 +84,19 @@ export default function Attendance() {
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
-      if (!(await NfcManager.isSupported())) return setNfcState('unsupported');
-      await NfcManager.start();
-      if (!(await NfcManager.isEnabled())) return setNfcState('off');
-      NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag: TagEvent) => {
-        if (!tag.id) return;
-        handle(`nfc:${tag.id}`, { type: 'nfc', uid: tag.id, payload: textFromTag(tag) });
-      });
-      await NfcManager.registerTagEvent({ invalidateAfterFirstRead: false, isReaderModeEnabled: true });
-      if (!cancelled) setNfcState('on');
-    })().catch(() => setNfcState('off'));
+    startListening((uid, payload) => handle(`nfc:${uid}`, { type: 'nfc', uid, payload }))
+      .then((state) => !cancelled && setNfcState(state))
+      .catch(() => setNfcState('off'));
     return () => {
       cancelled = true;
-      NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
-      NfcManager.unregisterTagEvent().catch(() => {});
+      stopListening();
       if (hideTimer.current) clearTimeout(hideTimer.current);
     };
   }, [handle]);
 
   if (!permission) return <View style={ui.screen} />;
-  if (!permission.granted) {
+  // Demo mode works without a camera (simulated scans), e.g. on a laptop.
+  if (!permission.granted && !isDemo()) {
     return (
       <View style={[ui.screen, ui.content, { justifyContent: 'center' }]}>
         <Text style={ui.h2}>Camera needed</Text>
@@ -115,6 +111,7 @@ export default function Attendance() {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#000' }}>
+      {permission.granted && (
       <CameraView
         ref={camera}
         style={StyleSheet.absoluteFill}
@@ -124,6 +121,7 @@ export default function Attendance() {
         barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
         onBarcodeScanned={onBarcode}
       />
+      )}
 
       <View style={s.top}>
         <Text style={s.title}>Show your card, or tap your sticker</Text>
@@ -142,6 +140,8 @@ export default function Attendance() {
         </View>
       )}
 
+      {isDemo() && <DemoScanner onScan={(payload) => handle(`qr:${payload}`, { type: 'qr', payload })} />}
+
       <Pressable onLongPress={() => router.back()} delayLongPress={1200} style={s.exit} accessibilityHint="Hold to leave attendance mode">
         <Text style={{ color: '#fff' }}>Hold to exit</Text>
       </Pressable>
@@ -149,7 +149,29 @@ export default function Attendance() {
   );
 }
 
+/** Demo only: tap a student to simulate showing their QR card. */
+function DemoScanner({ onScan }: { onScan: (payload: string) => void }) {
+  const students = q.students();
+  const enrolments = q.enrolments();
+  const expected = q.sessionsOn().flatMap((session) => expectedStudents(session, students, enrolments).map((e) => e.student));
+  const unique = [...new Map(expected.map((st) => [st.id, st])).values()];
+  return (
+    <View style={s.demo}>
+      <Text style={{ color: '#fff', fontWeight: '700' }}>Demo: tap a student to simulate their QR card</Text>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+        {unique.map((st) => (
+          <Pressable key={st.id} onPress={() => onScan(cardPayload(DEMO_SECRET, st.id, 1))} style={s.demoChip}>
+            <Text style={{ color: '#fff' }}>{st.name}</Text>
+          </Pressable>
+        ))}
+      </View>
+    </View>
+  );
+}
+
 const s = StyleSheet.create({
+  demo: { position: 'absolute', top: 175, left: 16, right: 16, backgroundColor: 'rgba(138,59,18,0.85)', borderRadius: 12, padding: 12, gap: 8 },
+  demoChip: { borderRadius: 999, borderWidth: 1, borderColor: '#fff', paddingHorizontal: 12, paddingVertical: 6 },
   top: { position: 'absolute', top: 48, left: 16, right: 16, backgroundColor: 'rgba(0,0,0,0.55)', borderRadius: 12, padding: 14, gap: 4 },
   title: { color: '#fff', fontSize: 20, fontWeight: '700' },
   sub: { color: '#ddd', fontSize: 13 },

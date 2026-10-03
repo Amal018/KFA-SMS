@@ -9,6 +9,10 @@ import { clearAll, getKv, pendingCount } from '@/data/local';
 import * as q from '@/data/queries';
 import { ensureDevice, syncNow } from '@/data/sync';
 import { supabase } from '@/lib/supabase';
+import { deleteSecret } from '@/lib/secrets';
+import { isDemo } from '@/data/demo';
+import { emitChange } from '@/data/events';
+import { CARD_SECRET_KEY } from '@/data/keys';
 
 function useRefresh() {
   const [, setTick] = useState(0);
@@ -49,7 +53,9 @@ export default function Home() {
   function signOut() {
     const go = async () => {
       clearAll();
+      await deleteSecret(CARD_SECRET_KEY);
       await supabase.auth.signOut();
+      emitChange('changed');
     };
     if (pending > 0) {
       Alert.alert('Check-ins not uploaded', `${pending} check-in(s) haven't reached the server yet. Sync first, or they will be lost.`, [
@@ -66,7 +72,9 @@ export default function Home() {
           <Text style={styles.h2}>Sync</Text>
           {pending > 0 ? <Pill text={`${pending} waiting`} fg={colors.warn} bg={colors.warnBg} /> : <Pill text="Up to date" fg={colors.ok} bg={colors.okBg} />}
         </View>
-        <Text style={styles.muted}>{lastSync ? `Last synced at ${localTimeOf(Number(lastSync))}` : 'Not synced yet'}</Text>
+        <Text style={styles.muted}>
+          {isDemo() ? 'Demo mode: sample data on this device, nothing is uploaded.' : lastSync ? `Last synced at ${localTimeOf(Number(lastSync))}` : 'Not synced yet'}
+        </Text>
         {Math.abs(drift) > 120_000 && (
           <Text style={{ color: colors.error }}>This phone's clock is off by {Math.round(drift / 60_000)} min. Fix it in Settings → Date & time.</Text>
         )}
