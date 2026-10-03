@@ -37,11 +37,25 @@ Browsers can't read USB fingerprint scanners. WebAuthn and Windows Hello don't w
 | **A. Standalone attendance terminal (recommended)**, e.g. ZKTeco / eSSL models with **ADMS / push** support (K40 Pro, MB20, X990 or similar) | The device stores fingerprints and does the matching itself. Every punch is pushed over Wi-Fi/LAN to our server's HTTP endpoint (ADMS protocol), or pulled over TCP port 4370 by a small bridge program | ₹4,000–₹10,000 | Matching is solved and fast. Works offline: punches queue on the device and sync later. Has its own screen and beep, so no PC is needed at the door. Proven in Indian schools and offices | Enrolment happens on the device or via its protocol, not in our UI. We must map device user IDs to students. Must buy a model that supports push/ADMS |
 | **B. USB scanner + Windows desktop app**, e.g. Mantra MFS110 or SecuGen Hamster Pro 20 | A PC app built on the vendor SDK captures templates and runs 1:N matching against every enrolled student | ₹2,500–₹4,000 per scanner | Enrolment and attendance all happen inside our app, which matches the owner's description of opening the app and scanning | We build and maintain the 1:N matching loop and a Windows desktop app (or a local bridge service). Needs a PC that's on all day at the entrance. Works only while that PC is running |
 
-**Recommendation:** Option A, with a web app for everything else. It's the most reliable and the least custom biometric code. The owner's "open the app and put the finger" flow becomes "put the finger on the device at the door; open the app to see who's present."
+#### Update 2026-10-03: the owner wants to run attendance from their mobile phone
 
-> ⚠️ **Before buying hardware,** confirm the exact model supports **ADMS / cloud push** (or the TCP SDK), and that its capacity (fingerprints, logs) covers the expected number of students plus 50% growth.
+**The phone's built-in fingerprint sensor can't do this.** Android (`BiometricPrompt`) and iOS (Touch ID / Face ID) never give an app the fingerprint or say *whose* finger it was. They only answer "one of the fingers enrolled on this phone matched: yes or no". The phone also holds only about 5 fingers, all treated as the phone owner. An app can't tell students apart this way, and no app can work around it.
 
-If the owner insists on Option B, everything below still applies. Only the "punch ingestion" component (§5.3) changes.
+The workable way to keep "phone + fingerprint" is an external scanner plugged into the phone:
+
+| Option | How it works | Cost (approx., India) | Pros | Cons |
+|---|---|---|---|---|
+| **C. Android phone + USB-OTG fingerprint scanner (now recommended)**, e.g. Mantra MFS110 L1 or SecuGen Hamster Pro 20 (both have Android SDKs) | A native Android app talks to the scanner via its SDK. It captures templates at enrolment and does 1:N matching on each scan against the students stored on the phone, then syncs the result to the server | ₹2,500–₹4,000 per scanner, plus an OTG adapter if needed | Everything happens in one app on the owner's phone. No PC needed. Works offline: attendance queues on the phone and syncs later | **Android only:** iPhones can't use these scanners. Needs a native app (Kotlin, or Flutter/React Native with a native module), not a website. We build the 1:N matching loop (fine for a few hundred students). The scanner must be plugged in during attendance. Templates live on the phone, so they must be encrypted and backed up |
+
+Options A and B remain fallbacks: A if a second phone or staff member needs to take attendance, B if a PC is preferred.
+
+> ⚠️ **Before buying a scanner,** confirm the exact model's **Android SDK supports template extraction and matching** (not only the Aadhaar "RD Service" mode, which is for UIDAI authentication and can't be used for our own matching). Test it with the owner's actual phone over OTG.
+
+**Recommendation:** Option C: an Android app for enrolment, attendance and day-to-day use, with the same server (§2.3) for data, scheduled jobs and WhatsApp. The flow stays exactly as the owner described: open the app, the student puts their finger on the scanner, and they're marked present.
+
+> ⚠️ **If using Option A,** confirm the exact model supports **ADMS / cloud push** (or the TCP SDK), and that its capacity (fingerprints, logs) covers the expected number of students plus 50% growth.
+
+Whichever option is chosen, everything below still applies. Only the "punch ingestion" component (§5.3) changes. With Option C, the phone app creates the Punch records itself.
 
 ### 2.2 WhatsApp: use the official API only
 
@@ -61,10 +75,12 @@ Constraints the developer must design for:
 
 ### 2.3 Platform and stack (suggested)
 
-- **Web app:** Next.js with TypeScript, the stack already used for ADS-photography, so it's familiar. Mobile-friendly, so the owner can check it on a phone.
+- **Android app (Option C):** the owner's main tool. Students, enrolment with the fingerprint scanner, attendance scanning, fees and reminders. Built in Kotlin, or Flutter with a native plugin wrapping the scanner SDK. Keeps a local encrypted database (students plus templates) so scanning works offline, and syncs punches and changes to the server.
+- **Server and web admin:** Next.js with TypeScript (the stack already used for ADS-photography) serving the app's API, plus an optional browser admin for reports and exports.
 - **Database:** PostgreSQL, hosted (e.g. Supabase or Neon), with daily automated backups.
-- **Scheduled jobs:** absence marking, fee reminders and absence reminders, run by a cron (platform cron or `pg_cron`).
-- **Device integration:** an ADMS push endpoint (`/iclock/cdata` style) on the server. Fallback: a small bridge program on the institute PC that pulls logs over TCP and posts them to the server.
+- **Scheduled jobs:** absence marking, fee reminders and absence reminders, run on the server by a cron (platform cron or `pg_cron`), never on the phone, so reminders still go out if the phone is off.
+- **Device integration:** Option C: punches come from the Android app through the API. Option A: an ADMS push endpoint (`/iclock/cdata` style) on the server.
+- **Template backup (Option C):** encrypted fingerprint templates are backed up to the server (encrypted at rest, never readable in the web admin) so a lost or replaced phone doesn't mean re-enrolling every student.
 - **Auth:** email or phone plus password for staff, with roles (§9).
 - **Timezone:** everything stored in UTC and displayed in **Asia/Kolkata (IST)**.
 
@@ -171,7 +187,7 @@ Holiday, User (staff), AuditLog, Settings
 
 ### 5.3 Ingestion reliability
 - The device clock can drift. The bridge or endpoint syncs device time daily and logs the drift. Reject or flag punches more than 10 minutes in the future.
-- **Offline device or internet:** punches queue on the device and arrive later. Because of this, the absence *message* job must wait until the punches for that session have synced. If the device hasn't checked in since before session end, **hold absence messages** and alert the owner instead.
+- **Offline device or internet:** punches queue on the device and arrive later. Because of this, the absence *message* job must wait until the punches for that session have synced. If the device (or, with Option C, the attendance phone) hasn't checked in since before session end, **hold absence messages** and alert the owner instead.
 - Ingestion is idempotent on `(device_serial, device_user_id, punched_at)`.
 
 ---
@@ -246,6 +262,10 @@ Holiday, User (staff), AuditLog, Settings
 | Server or database outage | Device retries its push. Bridge buffers locally |
 | Staff member leaves | Deactivate their user account. Their audit history is kept |
 | Data loss | Daily DB backups with 30-day retention. Restore tested once before go-live |
+| Phone lost, stolen or replaced (Option C) | Install the app on the new phone, log in, and restore encrypted templates from the server. Revoke the old phone's session from the web admin |
+| Scanner unplugged or not detected (Option C) | App shows a clear "connect scanner" banner. Manual marking is still available |
+| Phone battery dies or app closed during class (Option C) | Scans already taken are stored locally and sync when reopened. Absence messages are held until the phone syncs (§5.3) |
+| Phone has no internet during class (Option C) | Scanning works offline. Results sync when the connection returns |
 
 ---
 
@@ -321,7 +341,7 @@ Holiday, User (staff), AuditLog, Settings
 | # | Question | Why it matters |
 |---|---|---|
 | Q1 | Roughly how many students, batches and branches? Expected growth? | Device capacity, cost, number of devices |
-| Q2 | Option A (attendance terminal at the door) or Option B (USB scanner on a PC)? What's the hardware budget? | Architecture (§2.1) |
+| Q2 | ~~Which hardware option?~~ **Answered: the owner's mobile phone (Option C).** Is the phone Android (which model)? Does it have a USB-C port with OTG? Will anyone else take attendance on another phone? | Option C works only on Android (§2.1) |
 | Q3 | Fee structure: monthly per batch? Due date? Pro-rating for mid-month joiners? Admission or other fees? | Fee engine (§4 C4) |
 | Q4 | When a student leaves with dues outstanding, should reminders continue? | Reminder rules |
 | Q5 | Is the fee still due if a student is absent all month without pausing? | Fee policy |
