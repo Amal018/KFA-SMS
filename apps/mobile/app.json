@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "KFA SMS",
+    "slug": "kfa-sms",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "in.kfa.sms"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "in.kfa.sms",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.NFC"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "KFA SMS uses the camera to scan student ID cards and take check-in photos.",
+          "recordAudioAndroid": false
+        }
+      ],
+      "expo-sqlite",
+      "expo-secure-store",
+      [
+        "react-native-nfc-manager",
+        {
+          "nfcPermission": "KFA SMS reads student NFC stickers for attendance."
+        }
+      ]
+    ],
+    "scheme": "kfasms",
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

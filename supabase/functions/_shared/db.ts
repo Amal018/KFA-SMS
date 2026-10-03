@@ -1,21 +1,19 @@
 // Row <-> packages/core mapping and data loaders shared by the edge functions.
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import {
-  DEFAULT_SETTINGS,
-  type AttendanceRecord,
-  type AttendanceSettings,
-  type Batch,
-  type Device,
-  type Enrolment,
-  type Holiday,
-  type Leave,
-  type Schedule,
-  type Session,
-  type Student,
-} from '@kfa/core';
+import { toBatch, toSettings, toStudent, type AttendanceSettings, type Batch, type Row, type Student } from '@kfa/core';
 
-// deno-lint-ignore no-explicit-any
-export type Row = Record<string, any>;
+export {
+  fromRecord,
+  fromSession,
+  toDevice,
+  toEnrolment,
+  toHoliday,
+  toLeave,
+  toRecord,
+  toSchedule,
+  toSession,
+  type Row,
+} from '@kfa/core';
 
 export function serviceClient(): SupabaseClient {
   return createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
@@ -44,107 +42,6 @@ export function one(res: Result): Row | null {
   if (res.error) throw new Error(res.error.message);
   return (res.data as Row | null) ?? null;
 }
-
-const hhmm = (t: string) => t.slice(0, 5);
-const ms = (t: string | null) => (t ? Date.parse(t) : null);
-
-export const toSettings = (row: Row | null): AttendanceSettings => ({ ...DEFAULT_SETTINGS, ...(row?.attendance ?? {}) });
-
-export const toBatch = (r: Row): Batch => ({ id: r.id, name: r.name, teacherId: r.teacher_id, settings: r.settings ?? {} });
-
-export const toSchedule = (r: Row): Schedule => ({
-  id: r.id,
-  batchId: r.batch_id,
-  weekday: r.weekday,
-  start: hhmm(r.start_time),
-  end: hhmm(r.end_time),
-  validFrom: r.valid_from,
-  validTo: r.valid_to,
-});
-
-export const toHoliday = (r: Row): Holiday => ({ date: r.date, name: r.name, batchIds: r.batch_ids });
-
-export const toSession = (r: Row): Session => ({
-  id: r.id,
-  batchId: r.batch_id,
-  date: r.date,
-  start: hhmm(r.start_time),
-  end: hhmm(r.end_time),
-  status: r.status,
-  kind: r.kind,
-  countsForPercent: r.counts_for_percent,
-  absenceAlerts: r.absence_alerts,
-  cancelReason: r.cancel_reason,
-});
-
-export const fromSession = (s: Session): Row => ({
-  id: s.id,
-  batch_id: s.batchId,
-  date: s.date,
-  start_time: s.start,
-  end_time: s.end,
-  status: s.status,
-  kind: s.kind,
-  counts_for_percent: s.countsForPercent,
-  absence_alerts: s.absenceAlerts,
-});
-
-export const toStudent = (r: Row, pauses: Row[] = []): Student => ({
-  id: r.id,
-  name: r.full_name,
-  dateOfBirth: r.date_of_birth,
-  leftOn: r.left_on,
-  pauses: pauses.filter((p) => p.student_id === r.id).map((p) => ({ from: p.from_date, to: p.to_date })),
-  whatsappOptIn: r.whatsapp_opt_in && !!r.whatsapp_number,
-  guardian:
-    r.guardian_name || r.guardian_whatsapp_number
-      ? { name: r.guardian_name ?? '', whatsappOptIn: r.guardian_whatsapp_opt_in && !!r.guardian_whatsapp_number }
-      : null,
-});
-
-export const toEnrolment = (r: Row): Enrolment => ({
-  id: r.id,
-  studentId: r.student_id,
-  batchId: r.batch_id,
-  startDate: r.start_date,
-  endDate: r.end_date,
-  status: r.status,
-  kind: r.kind,
-});
-
-export const toLeave = (r: Row): Leave => ({
-  id: r.id,
-  studentId: r.student_id,
-  from: r.from_date,
-  to: r.to_date,
-  batchId: r.batch_id,
-  status: r.status,
-});
-
-export const toRecord = (r: Row): AttendanceRecord => ({
-  sessionId: r.session_id,
-  studentId: r.student_id,
-  status: r.status,
-  source: r.source,
-  locked: r.locked,
-  punchId: r.client_punch_id,
-  punchedAt: ms(r.punched_at),
-  reason: r.reason,
-});
-
-export const fromRecord = (r: AttendanceRecord): Row => ({
-  session_id: r.sessionId,
-  student_id: r.studentId,
-  status: r.status,
-  source: r.source,
-  locked: r.locked,
-  client_punch_id: r.punchId ?? null,
-  punched_at: r.punchedAt ? new Date(r.punchedAt).toISOString() : null,
-  reason: r.reason ?? null,
-  updated_at: new Date().toISOString(),
-});
-
-export const toDevice = (r: Row): Device => ({ id: r.id, name: r.name, lastSyncAt: ms(r.last_sync_at), revoked: r.revoked });
 
 export async function loadSettings(db: SupabaseClient): Promise<AttendanceSettings> {
   return toSettings(one(await db.from('institute_settings').select('attendance').eq('id', 1).maybeSingle()));

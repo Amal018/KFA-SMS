@@ -2,10 +2,15 @@
   "name": "kfa-sms",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "scripts": {
     "test": "npm test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present"
+  },
+  "overrides": {
+    "react": "19.2.3",
+    "react-native-worklets": "0.10.1"
   }
 }
