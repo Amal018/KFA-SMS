@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { cancelSession, expectedEnrolment, expectedStudents, extraSession, generateSessions } from '../src';
-import { danceSat, enrolment, SAT, session, student } from './fixtures';
+import { cancelSession, expectedEnrolment, expectedStudents, extraSession, generateSessions } from '../src/index.ts';
+import { danceSat, enrolment, SAT, session, student } from './fixtures.ts';
 
 describe('Sessions and calendar (spec §3)', () => {
   it('S-01 weekly schedule generates one session per scheduled weekday', () => {

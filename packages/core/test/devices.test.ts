@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { finalizeSession, resolvePunch, DEFAULT_SETTINGS } from '../src';
-import { at, ctx, dance, device, enrolment, punch, session, student } from './fixtures';
+import { finalizeSession, resolvePunch, DEFAULT_SETTINGS } from '../src/index.ts';
+import { at, ctx, dance, device, enrolment, punch, session, student } from './fixtures.ts';
 
 describe('Devices, offline and sync (spec §11)', () => {
   it('D-01/D-02 a punch resolved offline gives the same result when the server re-runs it', () => {

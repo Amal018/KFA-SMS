@@ -1,4 +1,4 @@
-import type { AttendanceRecord, Session } from './types';
+import type { AttendanceRecord, Session } from './types.ts';
 
 export interface AttendanceSummary {
   present: number;

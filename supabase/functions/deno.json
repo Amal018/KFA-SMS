@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "@kfa/core": "../../packages/core/src/index.ts",
+    "@noble/hashes/": "npm:/@noble/hashes@2.4.0/",
+    "@supabase/supabase-js": "jsr:@supabase/supabase-js@2"
+  }
+}

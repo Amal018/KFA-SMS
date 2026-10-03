@@ -1,4 +1,4 @@
-import type { Instant, LocalDate, LocalTime } from './types';
+import type { Instant, LocalDate, LocalTime } from './types.ts';
 
 /** India Standard Time is a fixed UTC+05:30 with no daylight saving. */
 export const IST_OFFSET_MIN = 330;

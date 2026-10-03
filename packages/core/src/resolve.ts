@@ -1,6 +1,6 @@
-import { settingsForBatch } from './settings';
-import { expectedEnrolment, isStudentActiveOn, sessionTimes } from './sessions';
-import { DAY, localDateOf, MINUTE } from './time';
+import { settingsForBatch } from './settings.ts';
+import { expectedEnrolment, isStudentActiveOn, sessionTimes } from './sessions.ts';
+import { DAY, localDateOf, MINUTE } from './time.ts';
 import type {
   AttendanceRecord,
   AttendanceSettings,
@@ -14,7 +14,7 @@ import type {
   ReviewFlag,
   Session,
   Student,
-} from './types';
+} from './types.ts';
 
 export interface ResolveContext {
   settings: AttendanceSettings;

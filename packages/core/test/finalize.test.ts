@@ -8,8 +8,8 @@ import {
   resolvePunch,
   undoManual,
   type FinalizeContext,
-} from '../src';
-import { at, ctx, dance, device, enrolment, leave, punch, record, session, student } from './fixtures';
+} from '../src/index.ts';
+import { at, ctx, dance, device, enrolment, leave, punch, record, session, student } from './fixtures.ts';
 
 function fctx(over: Partial<FinalizeContext> = {}): FinalizeContext {
   return {

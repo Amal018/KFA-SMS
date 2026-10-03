@@ -1,6 +1,6 @@
-import { absenceAlertKey } from './resolve';
-import { sessionTimes } from './sessions';
-import type { AttendanceRecord, AttendanceSettings, AttendanceStatus, Batch, Punch, Session } from './types';
+import { absenceAlertKey } from './resolve.ts';
+import { sessionTimes } from './sessions.ts';
+import type { AttendanceRecord, AttendanceSettings, AttendanceStatus, Batch, Punch, Session } from './types.ts';
 
 export type Role = 'owner' | 'staff' | 'teacher';
 

@@ -9,8 +9,8 @@ import {
   verifyFace,
   type Credential,
   type FaceProfile,
-} from '../src';
-import { ctx, dance, punch, session } from './fixtures';
+} from '../src/index.ts';
+import { ctx, dance, punch, session } from './fixtures.ts';
 
 const SECRET = 'test-secret';
 

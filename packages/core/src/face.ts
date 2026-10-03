@@ -1,4 +1,4 @@
-import type { AttendanceSettings, FaceVerifyResult } from './types';
+import type { AttendanceSettings, FaceVerifyResult } from './types.ts';
 
 export interface FaceProfile {
   id: string;

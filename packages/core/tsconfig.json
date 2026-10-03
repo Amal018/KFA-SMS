@@ -8,6 +8,7 @@
     "exactOptionalPropertyTypes": false,
     "skipLibCheck": true,
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "lib": ["ES2022"],
     "types": []
   },

@@ -1,7 +1,7 @@
-import { absenceAlertKey } from './resolve';
-import { absenceAlertsOn } from './settings';
-import { expectedEnrolment } from './sessions';
-import { ageOn, nextSendTime } from './time';
+import { absenceAlertKey } from './resolve.ts';
+import { absenceAlertsOn } from './settings.ts';
+import { expectedEnrolment } from './sessions.ts';
+import { ageOn, nextSendTime } from './time.ts';
 import type {
   AttendanceRecord,
   AttendanceSettings,
@@ -15,7 +15,7 @@ import type {
   Session,
   SessionStatus,
   Student,
-} from './types';
+} from './types.ts';
 
 /** Who receives WhatsApp messages: the guardian for under-18s, otherwise the student (N-01, N-03). */
 export function alertRecipient(student: Student, on: LocalDate): 'student' | 'guardian' | null {

@@ -1,5 +1,5 @@
-import { settingsForBatch } from './settings';
-import { addDays, inRange, MINUTE, toInstant, weekdayOf } from './time';
+import { settingsForBatch } from './settings.ts';
+import { addDays, inRange, MINUTE, toInstant, weekdayOf } from './time.ts';
 import type {
   AttendanceSettings,
   Batch,
@@ -13,7 +13,7 @@ import type {
   Session,
   SessionKind,
   Student,
-} from './types';
+} from './types.ts';
 
 export function sessionId(batchId: string, date: LocalDate, start: LocalTime): string {
   return `${batchId}:${date}:${start}`;

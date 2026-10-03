@@ -1,4 +1,4 @@
-import type { AttendanceSettings, Batch, Session } from './types';
+import type { AttendanceSettings, Batch, Session } from './types.ts';
 
 export const DEFAULT_SETTINGS: AttendanceSettings = {
   openBeforeMin: 30,

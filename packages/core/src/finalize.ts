@@ -1,5 +1,5 @@
-import { expectedStudents, isOnLeave, sessionTimes } from './sessions';
-import { DAY, MINUTE } from './time';
+import { expectedStudents, isOnLeave, sessionTimes } from './sessions.ts';
+import { DAY, MINUTE } from './time.ts';
 import type {
   AttendanceRecord,
   AttendanceSettings,
@@ -11,7 +11,7 @@ import type {
   OwnerNotice,
   Session,
   Student,
-} from './types';
+} from './types.ts';
 
 export interface FinalizeContext {
   settings: AttendanceSettings;

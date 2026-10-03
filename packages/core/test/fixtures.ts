@@ -15,7 +15,7 @@ import {
   type Schedule,
   type Session,
   type Student,
-} from '../src';
+} from '../src/index.ts';
 
 /** Saturday 3 Oct 2026, the default test day. */
 export const SAT = '2026-10-03';

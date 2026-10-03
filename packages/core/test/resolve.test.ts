@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { absenceAlertKey, DAY, MINUTE, resolvePunch } from '../src';
-import { at, ctx, dance, enrolment, punch, record, SAT, session, student } from './fixtures';
+import { absenceAlertKey, DAY, MINUTE, resolvePunch } from '../src/index.ts';
+import { at, ctx, dance, enrolment, punch, record, SAT, session, student } from './fixtures.ts';
 
 const S = session().id;
 

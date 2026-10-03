@@ -9,8 +9,8 @@ import {
   summarize,
   type AbsenceAlertContext,
   type StreakEntry,
-} from '../src';
-import { at, dance, enrolment, record, SAT, session, student } from './fixtures';
+} from '../src/index.ts';
+import { at, dance, enrolment, record, SAT, session, student } from './fixtures.ts';
 
 function actx(over: Partial<AbsenceAlertContext> = {}): AbsenceAlertContext {
   return { settings: DEFAULT_SETTINGS, batches: [dance], students: [student('asha')], enrolments: [enrolment('asha')], ...over };
