@@ -4,6 +4,8 @@
 **Audience:** The developer(s) who will build this, and the institute owner, who has to answer the open questions in §12.
 **Date:** 2026-10-03
 
+> **Update:** the owner chose **face recognition, QR cards and NFC stickers on their phone** instead of fingerprints. The fingerprint sections below (§2.1, C2, §6.2) are superseded by [APP-PLAN.md](APP-PLAN.md), which is now the build plan. All other sections still apply.
+
 ---
 
 ## 1. What the owner asked for
