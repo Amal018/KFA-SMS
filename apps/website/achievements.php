@@ -9,7 +9,7 @@ $page = [
     'footer' => 'full',
     'og_image' => 'assets/images/achievements/hero-certificate.jpg',
     'scripts' => ['js/achievements.js'],
-    'jsonld' => breadcrumb_jsonld([['Home', ''], ['Achievements', 'achievements.php']]),
+    'crumbs' => [['Home', ''], ['Achievements', 'achievements.php']],
 ];
 require __DIR__ . '/includes/header.php';
 
@@ -41,7 +41,7 @@ $milestones = [
             <p>A journey shaped by creativity, dedication and remarkable milestones in the world of art and art education.</p>
         </div>
         <div class="hero__media brush-media">
-            <img src="assets/images/achievements/hero-certificate.jpg" width="832" height="420" alt="Framed certificate beside a jar of paint brushes" fetchpriority="high">
+            <img src="assets/images/achievements/hero-certificate.jpg" width="832" height="420" alt="An artist's desk with brushes, paints and prints on the wall" fetchpriority="high">
         </div>
     </div>
 </section>
@@ -80,7 +80,7 @@ $milestones = [
 
 <section class="big-stat">
     <div class="container reveal">
-        <span class="big-stat__num">5</span>
+        <span class="big-stat__num" data-count="5">5</span>
         <h2>World Record Achievements</h2>
         <p>A remarkable testament to creativity, dedication and artistic excellence.</p>
     </div>
@@ -94,7 +94,7 @@ $milestones = [
         </div>
         <ul class="thumb-grid reveal" data-lightbox-group="milestones">
             <?php foreach ($milestones as [$f, $cap]): ?>
-            <li><button class="thumb" type="button" data-lightbox="assets/images/achievements/<?= $f ?>" data-caption="<?= e($cap) ?>" aria-label="View larger: <?= e($cap) ?>"><img src="assets/images/achievements/<?= $f ?>" alt="<?= e($cap) ?>" width="429" height="210" loading="lazy"><?php if (str_starts_with($f, 'certificate')): ?><span class="sample-tag">Sample</span><?php endif; ?></button></li>
+            <li><button class="thumb" type="button" data-lightbox="assets/images/achievements/<?= $f ?>" data-caption="<?= e($cap) ?>" aria-label="View larger: <?= e($cap) ?>"><img src="assets/images/achievements/<?= $f ?>" alt="<?= e($cap) ?>" width="429" height="210" loading="lazy"><span class="sample-tag">Sample</span></button></li>
             <?php endforeach; ?>
         </ul>
     </div>
@@ -110,7 +110,7 @@ $milestones = [
         </div>
         <ul class="collage reveal" data-lightbox-group="achievers">
             <?php foreach ([['achiever-girl', 'Student holding a certificate and medal'], ['achiever-sunset', 'Student painting of a tree at sunset'], ['achiever-medal', 'Medal awarded to a student'], ['achiever-sketch', 'Student pencil portrait'], ['achiever-boy', 'Young student with his award-winning painting']] as [$f, $alt]): ?>
-            <li style="display:contents"><button class="thumb" type="button" data-lightbox="assets/images/achievements/<?= $f ?>.jpg" data-caption="<?= e($alt) ?>" aria-label="View larger: <?= e($alt) ?>"><img src="assets/images/achievements/<?= $f ?>.jpg" alt="<?= e($alt) ?>" width="350" height="332" loading="lazy"></button></li>
+            <li style="display:contents"><button class="thumb" type="button" data-lightbox="assets/images/achievements/<?= $f ?>.jpg" data-caption="<?= e($alt) ?>" aria-label="View larger: <?= e($alt) ?>"><img src="assets/images/achievements/<?= $f ?>.jpg" alt="<?= e($alt) ?>" width="350" height="332" loading="lazy"><span class="sample-tag">Sample</span></button></li>
             <?php endforeach; ?>
         </ul>
     </div>

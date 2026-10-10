@@ -22,7 +22,7 @@ $page = [
     'footer' => 'compact',
     'og_image' => 'assets/images/contact/hero-brushes.jpg',
     'scripts' => ['js/contact.js'],
-    'jsonld' => breadcrumb_jsonld([['Home', ''], ['Contact', 'contact.php']]),
+    'crumbs' => [['Home', ''], ['Contact', 'contact.php']],
 ];
 require __DIR__ . '/includes/header.php';
 $a = cfg('address');
@@ -46,7 +46,7 @@ function old(array $old, string $k): string { return e($old[$k] ?? ''); }
             </ul>
         </div>
         <div class="hero__media brush-media">
-            <img src="assets/images/contact/hero-brushes.jpg" width="674" height="440" alt="Paint brushes in a jar beside a well-used paint palette" fetchpriority="high">
+            <img src="assets/images/contact/hero-brushes.jpg" width="674" height="440" alt="Paint brushes standing in glass jars" fetchpriority="high">
         </div>
     </div>
 </section>

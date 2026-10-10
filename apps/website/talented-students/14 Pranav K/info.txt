@@ -1,0 +1,5 @@
+Course: Drawing
+Age: 12
+About: A focused young artist building strong drawing fundamentals through regular practice with pencil, shapes and shading.
+Quote: Every Line|Tells a Story
+Pronoun: their

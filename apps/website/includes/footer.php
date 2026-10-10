@@ -93,6 +93,16 @@ $renderLinks = function (array $items, bool $courses = false) {
     </div>
     <?php if ($fv === 'full'): ?><div class="container footer-bottom footer-bottom--plain"><p><?= $copyright ?></p></div><?php else: ?><div class="footer-spacer"></div><?php endif; ?>
 <?php endif; ?>
+    <nav class="footer-seo" aria-label="Popular in Coimbatore">
+        <div class="container">
+            <span>Popular in Coimbatore:</span>
+            <a href="drawing-classes-coimbatore.php">Drawing Classes</a>
+            <a href="painting-classes-coimbatore.php">Painting Classes</a>
+            <a href="art-classes-coimbatore.php">Art Classes for Kids &amp; Adults</a>
+            <a href="course-details.php#professional">TN Govt. Drawing Exam Coaching</a>
+            <a href="blog.php">Art Blog</a>
+        </div>
+    </nav>
 </footer>
 
 <a class="whatsapp-float" href="<?= e(cfg('social.whatsapp')) ?>" target="_blank" rel="noopener" aria-label="Chat with Kalalaya Fine Arts on WhatsApp"><?= icon('whatsapp') ?></a>
@@ -108,7 +118,50 @@ $renderLinks = function (array $items, bool $courses = false) {
     <button class="lightbox__nav lightbox__nav--next" type="button" aria-label="Next image"><?= icon('arrow-right') ?></button>
 </div>
 
+<!-- Seat booking (multi-step; sends the request to WhatsApp) -->
+<div class="booking" id="booking" role="dialog" aria-modal="true" aria-labelledby="booking-title" hidden>
+    <div class="booking__panel">
+        <button class="booking__close" type="button" aria-label="Close booking form"><?= icon('close') ?></button>
+        <span class="eyebrow">Reserve a Seat</span>
+        <h2 class="h-sub" id="booking-title">Book a Class at Kalalaya</h2>
+        <ol class="booking__steps" aria-hidden="true"><li class="is-on">Course</li><li>Student</li><li>Timing</li></ol>
+        <form class="booking__form" novalidate data-whatsapp="<?= e(cfg('whatsapp')) ?>">
+            <fieldset class="booking__step" data-step="0">
+                <legend class="visually-hidden">Choose a course</legend>
+                <div class="choice-grid">
+                    <?php foreach (cfg('course_options', []) as $i => $opt): ?>
+                    <label class="choice"><input type="radio" name="course" value="<?= e($opt) ?>"<?= $i === 0 ? ' required' : '' ?>><span><?= e($opt) ?></span></label>
+                    <?php endforeach; ?>
+                </div>
+            </fieldset>
+            <fieldset class="booking__step" data-step="1" hidden>
+                <legend class="visually-hidden">Student details</legend>
+                <label class="field"><span>Student’s name</span><input type="text" name="student" maxlength="60" autocomplete="off" required></label>
+                <label class="field"><span>Age</span><input type="number" name="age" min="3" max="99" inputmode="numeric" required></label>
+                <label class="field"><span>Parent / contact name <small>(optional)</small></span><input type="text" name="parent" maxlength="60" autocomplete="name"></label>
+            </fieldset>
+            <fieldset class="booking__step" data-step="2" hidden>
+                <legend class="visually-hidden">Preferred timing</legend>
+                <div class="choice-grid choice-grid--2">
+                    <?php foreach (['Weekday evenings (Wed–Fri)', 'Saturday evening', 'Sunday morning', 'Flexible'] as $i => $t): ?>
+                    <label class="choice"><input type="radio" name="timing" value="<?= e($t) ?>"<?= $i === 0 ? ' required' : '' ?>><span><?= e($t) ?></span></label>
+                    <?php endforeach; ?>
+                </div>
+                <label class="field"><span>Anything we should know? <small>(optional)</small></span><textarea name="note" rows="2" maxlength="300"></textarea></label>
+            </fieldset>
+            <p class="booking__error" role="alert"></p>
+            <div class="booking__nav">
+                <button class="btn btn--outline btn--sm" type="button" data-back hidden>Back</button>
+                <button class="btn btn--primary btn--sm" type="button" data-next>Next <?= icon('arrow-right') ?></button>
+                <button class="btn btn--primary btn--sm" type="submit" data-send hidden><?= icon('whatsapp') ?> Send on WhatsApp</button>
+            </div>
+            <p class="booking__note">This opens WhatsApp with your details filled in, ready to send to Kalalaya. Prefer email? <a href="contact.php#enquiry">Use the enquiry form</a>.</p>
+        </form>
+    </div>
+</div>
+
 <script src="js/main.js?v=1.1" defer></script>
+<script src="js/motion.js?v=3.1" defer></script>
 <?php foreach ($page['scripts'] ?? [] as $s): ?>
 <script src="<?= e($s) ?>?v=1.1" defer></script>
 <?php endforeach; ?>

@@ -12,26 +12,23 @@ $canon    = abs_url($page['path'] ?? '');
 $ogImage  = abs_url($page['og_image'] ?? 'assets/images/hero/hero-girl-painting.jpg');
 $noindex  = !empty($page['noindex']);
 
+/* Menu. Sub-items: [label, link, short hint]; a one-item array ['Heading'] starts a group. */
+$courseMenu = [['All Courses', 'courses.php', 'Every programme at a glance'], ['Timings & Syllabus', 'course-details.php', 'Batches, days and topics'], ['By age group']];
+foreach (require __DIR__ . '/courses.php' as $c) $courseMenu[] = [$c['name'], 'course-details.php#' . $c['id'], $c['slider']];
 $nav = [
     ['home', 'Home', 'index.php'],
     ['about', 'About Us', 'about.php'],
-    ['courses', 'Courses', 'courses.php', [
-        ['Our Courses', 'courses.php'],
-        ['All Course Details', 'course-details.php'],
-        ['Kids (5–7 yrs)', 'course-details.php?category=kids'],
-        ['Young Artists (8–12 yrs)', 'course-details.php?category=young-artists'],
-        ['Teen Artists (13–18 yrs)', 'course-details.php?category=teen-artists'],
-        ['Professional Courses', 'course-details.php?category=professional'],
-        ['Short-Term Courses', 'course-details.php?category=short-term'],
-    ]],
+    ['courses', 'Courses', 'courses.php', $courseMenu],
     ['achievements', 'Achievements', 'achievements.php'],
     ['events', 'Events', 'events.php'],
     ['gallery', 'Gallery', 'gallery.php', [
-        ["Master’s Work", 'gallery.php#masters-work'],
-        ["Students’ Work", 'gallery.php#students-work'],
+        ["Master’s Work", 'gallery.php#masters-work', 'Paintings by our founder'],
+        ['Student Artwork', 'gallery.php#student-gallery', 'Browse by category'],
+        ['Talented Students', 'gallery.php#students-work', 'Meet our young artists'],
     ]],
     ['contact', 'Contact', 'contact.php'],
 ];
+$crumbs = array_values($page['crumbs'] ?? []);
 ?><!DOCTYPE html>
 <html lang="en-IN">
 <head>
@@ -45,7 +42,7 @@ $nav = [
 <?php if ($noindex): ?><meta name="robots" content="noindex, follow">
 <?php endif; ?>
 <link rel="canonical" href="<?= e($canon) ?>">
-<meta name="theme-color" content="#FF006E">
+<meta name="theme-color" content="#5236D9">
 
 <!-- Open Graph / Twitter -->
 <meta property="og:type" content="website">
@@ -63,20 +60,26 @@ $nav = [
 <link rel="icon" type="image/png" href="assets/logo/favicon.png">
 <link rel="apple-touch-icon" href="assets/logo/favicon.png">
 
-<!-- Fonts: Roboto Serif (headings), Roboto (UI), Dancing Script (decorative quotes only) -->
+<!-- Fonts: Fraunces (headings), Plus Jakarta Sans (UI), Caveat (hand-written accents) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Serif:opsz,wght@8..144,400..700&family=Roboto:wght@400;500;700&family=Dancing+Script:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Caveat:wght@500;700&display=swap">
 
 <link rel="stylesheet" href="css/style.css?v=1.0">
 <link rel="stylesheet" href="css/responsive.css?v=1.0">
+<link rel="stylesheet" href="css/motion.css?v=3.0">
+<link rel="stylesheet" href="css/theme.css?v=3.5">
 
 <script type="application/ld+json"><?= org_jsonld() ?></script>
 <?php if (!empty($page['jsonld'])): ?><script type="application/ld+json"><?= $page['jsonld'] ?></script>
 <?php endif; ?>
+<?php $ldCrumbs = array_values(array_filter($crumbs, fn($c) => $c[1] !== '' || $c[0] === 'Home'));
+if (count($ldCrumbs) > 1): ?><script type="application/ld+json"><?= breadcrumb_jsonld($ldCrumbs) ?></script>
+<?php endif; ?>
 </head>
 <body class="page-<?= e($pid) ?>">
 <a class="skip-link" href="#main">Skip to content</a>
+<div class="scroll-progress" aria-hidden="true"></div>
 
 <header class="site-header" id="top">
     <div class="topbar">
@@ -114,9 +117,11 @@ $nav = [
                             <button class="dropdown-toggle" type="button" aria-expanded="false" aria-controls="dd-<?= e($id) ?>" aria-label="Show <?= e($label) ?> submenu"><?= icon('chevron') ?></button>
                         </div>
                         <ul class="dropdown" id="dd-<?= e($id) ?>">
-                            <?php foreach ($sub as [$sl, $sh]): ?>
-                            <li><a href="<?= e($sh) ?>"><?= e($sl) ?></a></li>
-                            <?php endforeach; ?>
+                            <?php foreach ($sub as $s): if (count($s) === 1): ?>
+                            <li class="dropdown__heading" aria-hidden="true"><?= e($s[0]) ?></li>
+                            <?php else: ?>
+                            <li><a href="<?= e($s[1]) ?>"><span class="dropdown__label"><?= e($s[0]) ?></span><?php if (!empty($s[2])): ?><span class="dropdown__hint"><?= e($s[2]) ?></span><?php endif; ?></a></li>
+                            <?php endif; endforeach; ?>
                         </ul>
                     </li>
                     <?php else: ?>
@@ -124,13 +129,22 @@ $nav = [
                     <?php endif; ?>
                 <?php endforeach; ?>
                 </ul>
-                <a class="btn btn--primary nav-mobile-cta" href="contact.php#enquiry">Enquire Now</a>
+                <a class="btn btn--primary nav-mobile-cta" href="contact.php#enquiry" data-booking>Reserve a Seat</a>
             </nav>
 
-            <a class="btn btn--primary btn--sm header-cta" href="contact.php#enquiry">Enquire Now</a>
+            <a class="btn btn--primary btn--sm header-cta" href="contact.php#enquiry" data-booking>Reserve a Seat</a>
         </div>
     </div>
 </header>
 <div class="nav-backdrop" hidden></div>
 
 <main id="main">
+<?php if (count($crumbs) > 1): ?>
+<nav class="crumbs" aria-label="Breadcrumb">
+    <ol class="container">
+        <?php foreach ($crumbs as $i => [$label, $href]): $last = $i === count($crumbs) - 1; ?>
+        <li><?php if ($last): ?><span aria-current="page"><?= e($label) ?></span><?php else: ?><a href="<?= e($href === '' ? 'index.php' : $href) ?>"><?php if ($i === 0): ?><?= icon('home') ?><?php endif; ?><?= e($label) ?></a><?php endif; ?></li>
+        <?php endforeach; ?>
+    </ol>
+</nav>
+<?php endif; ?>

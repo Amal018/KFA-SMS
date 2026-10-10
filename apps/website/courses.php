@@ -8,29 +8,28 @@ $page = [
     'path' => 'courses.php',
     'footer' => 'full',
     'og_image' => 'assets/images/courses/cat-kids.jpg',
-    'jsonld' => breadcrumb_jsonld([['Home', ''], ['Courses', 'courses.php']]),
+    'crumbs' => [['Home', ''], ['Courses', 'courses.php']],
 ];
 require __DIR__ . '/includes/header.php';
 
 $cats = [
-    ['kids', 'Kids', 'Ages 5–7', 'Colouring and pencil drawing &amp; colouring.', 'Explore Kids Courses', 'cat-kids', 'Young girl in an apron drawing at the studio'],
-    ['young-artists', 'Young Artists', 'Ages 8–12', 'Drawing Fundamentals, Designs, 3D Objects, Shading, Portraits, Cartoons.', 'Explore Courses', 'cat-young', 'Boy practising pencil drawing'],
-    ['teen-artists', 'Teen Artists', 'Ages 13–18', 'Watercolour, Oil Painting, Acrylic Painting, Portrait, Landscape, Charcoal, Mandala, Perspective.', 'Explore Courses', 'cat-teen', 'Teenage student sketching'],
-    ['professional', 'Professional Courses', '', 'Tamil Nadu Government Technical Examination, Fashion Sketching, Illustration.', 'View Courses', 'cat-professional', 'Student working on a professional drawing'],
-    ['short-term', 'Short-Term Courses', '', 'Glass Painting, Tanjore Glass Reverse Painting, Mural Work, Portrait, Still Life, Mandala Art.', 'Explore Courses', 'cat-short-term', 'Learner working on a short-term art course'],
+    ['kids', 'Kids', 'Ages 5–7', 'Colouring and pencil drawing &amp; colouring.', 'Explore Kids Courses', 'cat-kids', 'Two young girls colouring with markers and crayons'],
+    ['young-artists', 'Young Artists', 'Ages 8–12', 'Drawing Fundamentals, Designs, 3D Objects, Shading, Portraits, Cartoons.', 'Explore Courses', 'cat-young', 'Young girl drawing with coloured pencils'],
+    ['teen-artists', 'Teen Artists', 'Ages 13–18', 'Watercolour, Oil Painting, Acrylic Painting, Portrait, Landscape, Charcoal, Mandala, Perspective.', 'Explore Courses', 'cat-teen', 'Student sketching on white paper'],
+    ['professional', 'Professional Courses', '', 'Tamil Nadu Government Technical Examination, Fashion Sketching, Illustration.', 'View Courses', 'cat-professional', 'Artist drawing a detailed pencil portrait'],
+    ['short-term', 'Short-Term Courses', '', 'Glass Painting, Tanjore Glass Reverse Painting, Mural Work, Portrait, Still Life, Mandala Art.', 'Explore Courses', 'cat-short-term', 'Hand painting colourful flowers'],
 ];
 ?>
 
 <section class="page-hero">
     <div class="container container--wide page-hero__grid">
         <div class="page-hero__copy">
-            <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="index.php">Home</a></li><li aria-current="page">Courses</li></ol></nav>
             <h1 class="h-display">Our Courses</h1>
             <p class="page-hero__sub">A Creative Journey for Every Age</p>
             <p>Whether your child is discovering art for the first time, a teenager wants to develop advanced skills, or an adult wants to explore a creative passion, there is a place for you at Kalalaya.</p>
         </div>
         <div class="page-hero__media brush-media">
-            <img src="assets/images/hero/hero-girl-painting.jpg" width="794" height="594" alt="Girl painting on an easel during a Kalalaya class" fetchpriority="high">
+            <img src="assets/images/hero/hero-girl-painting.jpg" width="794" height="594" alt="Young girl painting with a pink paint brush" fetchpriority="high">
         </div>
     </div>
 </section>
@@ -70,7 +69,7 @@ $cats = [
 <section class="section adults" style="padding-top:0">
     <div class="container container--wide split">
         <div class="media-frame reveal">
-            <img src="assets/images/courses/adult-homemaker.jpg" width="686" height="336" alt="Adult learner smiling while drawing at the studio" loading="lazy">
+            <img src="assets/images/courses/adult-homemaker.jpg" width="686" height="336" alt="Woman painting on an easel in a studio" loading="lazy">
         </div>
         <div class="reveal">
             <span class="eyebrow">For Adults &amp; Homemakers</span>

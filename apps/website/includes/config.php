@@ -26,7 +26,7 @@ return [
     /* ---------- Contact details ---------- */
     'phone_display' => '+91 98424 34219',
     'phone_link'    => '+919842434219',          // digits only, with country code
-    'whatsapp'      => '919842434219',           // used for wa.me link (no +)
+    'whatsapp'      => '919842343219',           // WhatsApp number for wa.me links + booking form (no +)
     'email'         => 'kalalayafinearts@gmail.com',
 
     // NOTE: The About Us mockup and the Contact mockup show DIFFERENT
@@ -42,6 +42,19 @@ return [
     'hours_days' => 'Monday – Saturday',
     'hours_time' => '9:00 AM – 7:00 PM',        // as shown on the Contact mockup — please confirm
 
+    // Structured-data opening hours (schema.org day codes, 24h times)
+    'opening_days'  => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    'opening_open'  => '09:00',
+    'opening_close' => '19:00',
+
+    // Exact studio location for Google (right-click the pin in Google Maps to
+    // copy the numbers). Leave '' until confirmed.   >>> REPLACE <<<
+    'geo' => ['lat' => '', 'lng' => ''],
+
+    // Neighbourhoods we mention as "nearby" for local search (keep it to places
+    // families genuinely travel from — Google penalises long fake lists).
+    'areas_served' => ['Maniyakarampalayam', 'Ganapathy', 'Sanganur', 'Rathinapuri', 'Gandhipuram', 'Saravanampatti', 'Peelamedu', 'Thudiyalur', 'Kavundampalayam', 'Vilankurichi'],
+
     /* ---------- Maps ---------- */
     // "Get Directions" / "View on Google Maps" buttons
     'maps_url'   => 'https://www.google.com/maps/search/?api=1&query=Kalalaya+Fine+Arts+Coimbatore',
@@ -55,13 +68,13 @@ return [
         'facebook'  => 'https://www.facebook.com/',      // >>> REPLACE <<<
         'instagram' => 'https://www.instagram.com/',     // >>> REPLACE <<<
         'youtube'   => 'https://www.youtube.com/',       // >>> REPLACE <<<
-        'whatsapp'  => 'https://wa.me/919842434219',
+        'whatsapp'  => 'https://wa.me/919842343219',
     ],
 
     /* ---------- Enquiry form (submit-enquiry.php) ---------- */
     'enquiry' => [
         // Where enquiries are delivered
-        'recipient'      => 'kalalayafinearts@gmail.com',
+        'recipient'      => 'annaidigitalantony@gmail.com',   // enquiry form + Digital Easel leads go here
         // The "From" address. On DirectAdmin this should be an address ON
         // YOUR OWN DOMAIN (e.g. no-reply@yourdomain.com) or mail may be rejected.
         'from_email'     => 'no-reply@kalalayafinearts.com',   // >>> REPLACE <<<

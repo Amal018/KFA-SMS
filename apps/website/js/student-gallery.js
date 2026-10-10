@@ -1,6 +1,6 @@
 /* =====================================================================
    STUDENT GALLERY — one reusable page for every student.
-   Reads ?student=<id>, finds the matching record in data/students.js
+   Reads ?student=<id>, finds the matching student from the talented-students/ folder
    and renders the profile + paginated artwork grid.
    ===================================================================== */
 (function () {
@@ -31,7 +31,7 @@
     var md = document.querySelector('meta[name="description"]');
     if (md) md.setAttribute('content', 'Artwork by ' + s.name + ' (' + s.course + ') at Kalalaya Fine Arts, Coimbatore.');
     var photo = document.getElementById('sp-photo');
-    photo.src = s.profile || ('assets/students/' + s.id + '/profile.jpg');
+    photo.src = s.profile || 'assets/images/placeholder.svg';
     photo.alt = s.name + ', ' + s.course + ' student at Kalalaya Fine Arts';
     document.getElementById('sp-name').textContent = s.name;
     document.getElementById('sp-meta').innerHTML = K.esc(s.course) + (s.age ? '<span class="sep" aria-hidden="true"></span>Age ' + K.esc(s.age) : '');
@@ -53,7 +53,7 @@
         if (!arts.length) { grid.innerHTML = '<li class="gallery-empty">Artwork will be added soon.</li>'; pager.innerHTML = ''; return; }
         var start = (page - 1) * ARTWORKS_PER_PAGE;
         grid.innerHTML = arts.slice(start, start + ARTWORKS_PER_PAGE).map(function (a, n) {
-            var alt = (a.title || 'Artwork') + ' — ' + (a.category || '') + ' by ' + s.name;
+            var alt = (a.title || 'Artwork') + (a.category ? ' — ' + a.category : '') + ' by ' + s.name;
             return '<li class="reveal"><figure class="art-card">' +
                 '<button class="art-card__img" type="button" data-index="' + (start + n) + '" aria-label="View larger: ' + K.esc(a.title) + '">' +
                 '<img src="' + K.esc(a.image) + '" alt="' + K.esc(alt) + '" width="500" height="340" loading="lazy"></button>' +
@@ -70,7 +70,7 @@
         var b = e.target.closest('button[data-index]');
         if (!b || !K.openLightbox) return;
         K.openLightbox(arts.map(function (a) {
-            return { src: a.image, caption: a.title, sub: a.category + ' · ' + s.name, alt: a.title + ' by ' + s.name };
+            return { src: a.image, caption: a.title, sub: (a.category ? a.category + ' · ' : '') + s.name, alt: a.title + ' by ' + s.name };
         }), parseInt(b.getAttribute('data-index'), 10));
     });
 

@@ -1,22 +1,32 @@
 <?php
 /**
  * ONE reusable page for every student:  student-gallery.php?student=<id>
- * Content is rendered by js/student-gallery.js from data/students.js.
+ * Content is rendered by js/student-gallery.js from the talented-students/ folder.
  */
 define('KALALAYA', true);
 require __DIR__ . '/includes/functions.php';
 $sid = preg_replace('/[^a-z0-9\-]/', '', strtolower($_GET['student'] ?? ''));
+$student = null;
+foreach (talented_students() as $s) if ($s['id'] === $sid) { $student = $s; break; }
+if (!$student) http_response_code(404);
 $page = [
     'id' => 'gallery',
-    'title' => 'Student Artwork | Kalalaya Fine Arts Gallery',
-    'description' => 'Artwork created by a Kalalaya Fine Arts student during their art journey in Coimbatore.',
+    'title' => $student ? $student['name'] . ' — Student Gallery | Kalalaya Fine Arts' : 'Student not found | Kalalaya Fine Arts',
+    'description' => $student
+        ? 'Artwork by ' . $student['name'] . ' (' . $student['course'] . ') at Kalalaya Fine Arts, Coimbatore.'
+        : 'Artwork created by a Kalalaya Fine Arts student during their art journey in Coimbatore.',
     'path' => 'student-gallery.php' . ($sid ? '?student=' . $sid : ''),
-    'scripts' => ['data/students.js', 'js/student-gallery.js'],
+    'og_image' => $student ? $student['profile'] : null,
+    'noindex' => !$student,
+    'crumbs' => array_filter([['Home', ''], ['Gallery', 'gallery.php'], ['Talented Students', 'gallery.php#students-work'],
+        $student ? [$student['name'], 'student-gallery.php?student=' . $sid] : ['Student not found', '']]),
+    'scripts' => ['js/student-gallery.js'],
     'footer' => 'compact',
 ];
 require __DIR__ . '/includes/header.php';
 ?>
 
+<?= talented_students_script() ?>
 <div id="student-app" data-student="<?= e($sid) ?>">
     <section class="profile-hero">
         <div class="container">

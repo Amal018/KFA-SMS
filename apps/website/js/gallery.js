@@ -1,5 +1,5 @@
 /* =====================================================================
-   GALLERY PAGE — renders "Our Talented Students" from data/students.js
+   GALLERY PAGE — renders "Our Talented Students" from the talented-students/ folder
    Shows STUDENTS_PER_PAGE cards per page with working pagination.
    ===================================================================== */
 (function () {
@@ -13,7 +13,7 @@
     var total = Math.max(1, Math.ceil(students.length / STUDENTS_PER_PAGE));
     var current = Math.min(Math.max(parseInt(K.getParam('page'), 10) || 1, 1), total);
 
-    function profileOf(s) { return s.profile || ('assets/students/' + s.id + '/profile.jpg'); }
+    function profileOf(s) { return s.profile || 'assets/images/placeholder.svg'; }
 
     function card(s) {
         var meta = K.esc(s.course) + (s.age ? '<span class="sep" aria-hidden="true"></span>Age ' + K.esc(s.age) : '');

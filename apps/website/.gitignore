@@ -1,0 +1,3 @@
+# Lead data from the Digital Easel (personal details) - never commit
+private/*
+!private/.htaccess

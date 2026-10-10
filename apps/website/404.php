@@ -9,6 +9,7 @@ $page = [
     'path' => '404.php',
     'noindex' => true,
     'footer' => 'compact',
+    'crumbs' => [['Home', ''], ['Page not found', '']],
     'use_base' => true, // so assets load correctly from any missing URL depth
 ];
 require __DIR__ . '/includes/header.php';

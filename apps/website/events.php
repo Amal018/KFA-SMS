@@ -7,7 +7,7 @@ $page = [
     'description' => 'Upcoming art workshops, exhibitions and events at Kalalaya Fine Arts, Coimbatore. Contact us to hear about the next event.',
     'path' => 'events.php',
     'footer' => 'compact',
-    'jsonld' => breadcrumb_jsonld([['Home', ''], ['Events', 'events.php']]),
+    'crumbs' => [['Home', ''], ['Events', 'events.php']],
 ];
 require __DIR__ . '/includes/header.php';
 ?>
@@ -15,12 +15,11 @@ require __DIR__ . '/includes/header.php';
 <section class="hero">
     <div class="container hero__grid">
         <div class="hero__copy">
-            <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="index.php">Home</a></li><li aria-current="page">Events</li></ol></nav>
             <h1 class="h-display">Events &amp; <span class="text-pink">Workshops</span></h1>
             <p>Exhibitions, workshops, competitions and creative get-togethers from the Kalalaya studio.</p>
         </div>
         <div class="hero__media brush-media">
-            <img src="assets/images/about/studio.jpg" width="698" height="484" alt="The Kalalaya Fine Arts studio" fetchpriority="high">
+            <img src="assets/images/about/studio.jpg" width="698" height="484" alt="An art studio with easels and paintings" fetchpriority="high">
         </div>
     </div>
 </section>

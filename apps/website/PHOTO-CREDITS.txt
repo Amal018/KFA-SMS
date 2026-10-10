@@ -1,0 +1,50 @@
+PHOTO CREDITS
+=============
+Stock photos from Unsplash (https://unsplash.com/license) — free for commercial use, no permission needed.
+Replace any of them with real Kalalaya photos at any time (keep the same file name).
+
+assets/images/hero/hero-girl-painting.jpg
+    Photo by Mike Fox on Unsplash — https://unsplash.com/photos/girl-using-pink-paint-brush-Ym301WfcEkE
+assets/images/hero/brushes-palette.jpg
+    Photo by Jennie Razumnaya on Unsplash — https://unsplash.com/photos/paintbrushes-on-colorful-wooden-palette-rixN0q0IamQ
+assets/images/about/brushes-table.jpg
+    Photo by Kamilla Isalieva on Unsplash — https://unsplash.com/photos/watercolor-paints-brushes-and-drinks-on-a-table-aPUrZ73jJ5w
+assets/images/about/hero-brushes-wide.jpg
+    Photo by Steve A Johnson on Unsplash — https://unsplash.com/photos/assorted-paint-brushes-IDmD4iw9XvE
+assets/images/about/studio.jpg
+    Photo by Raymond Yeung on Unsplash — https://unsplash.com/photos/art-studio-interior-filled-with-easels-and-artwork-uwhDZbX-sz8
+assets/images/contact/hero-brushes.jpg
+    Photo by Martin de Arriba on Unsplash — https://unsplash.com/photos/a-group-of-paint-brushes-sitting-in-a-glass-container-Ro4u_Y86Kx4
+assets/images/gallery/hero-brushes.jpg
+    Photo by Daniele Fasoli on Unsplash — https://unsplash.com/photos/a-table-topped-with-lots-of-art-supplies-sNQMXw8wT5U
+assets/images/gallery/landscape-canvas.jpg
+    Photo by Liana S on Unsplash — https://unsplash.com/photos/a-child-is-painting-a-picture-on-a-canvas-2LJ37SYO-W4
+assets/images/achievements/hero-certificate.jpg
+    Photo by Annie Spratt on Unsplash — https://unsplash.com/photos/desk-with-art-supplies-and-prints-lsGRNPZsMGA
+assets/images/courses/adult-homemaker.jpg
+    Photo by Vitaly Gariev on Unsplash — https://unsplash.com/photos/woman-painting-on-an-easel-in-a-studio-qyqq3gzbf9g
+assets/images/courses/cat-kids.jpg
+    Photo by Alan Rodriguez on Unsplash — https://unsplash.com/photos/two-young-girls-sitting-at-a-table-with-markers-and-crayons-N17Nkbsc-zY
+assets/images/courses/cat-young.jpg
+    Photo by Kelly Sikkema on Unsplash — https://unsplash.com/photos/a-young-girl-sitting-at-a-table-with-colored-pencils-mDMngG2yjqI
+assets/images/courses/cat-teen.jpg
+    Photo by Roman Mesyancev on Unsplash — https://unsplash.com/photos/woman-drawing-on-white-paper-vWaIl3inNcc
+assets/images/courses/cat-professional.jpg
+    Photo by Phong Phạm on Unsplash — https://unsplash.com/photos/a-person-drawing-a-picture-on-a-piece-of-paper-r1UN-Z48FzA
+assets/images/courses/cat-short-term.jpg
+    Photo by Mahin Ahmed on Unsplash — https://unsplash.com/photos/person-painting-colorful-flowers-on-a-white-background-NKkxx0igXuk
+assets/images/courses/detail-kids.jpg
+    Photo by Lucas Alexander on Unsplash — https://unsplash.com/photos/child-coloring-butterfly-drawing-with-crayon-sJuDgtkUyYs
+assets/images/courses/detail-drawing.jpg
+    Photo by Natalia Gasiorowska on Unsplash — https://unsplash.com/photos/a-pencil-drawing-of-a-ball-and-a-pencil-rOVY9FD4G_Q
+assets/images/courses/detail-painting.jpg
+    Photo by Jade Stephens on Unsplash — https://unsplash.com/photos/woman-painting-tree-and-cliff-WhVO1xKiDVw
+assets/images/courses/detail-professional.jpg
+    Photo by Charlota Blunarova on Unsplash — https://unsplash.com/photos/fashion-illustration-sketches-on-paper-r5xHI_H44aM
+assets/images/courses/detail-glass.jpg
+    Photo by Kamilla Isalieva on Unsplash — https://unsplash.com/photos/a-beautiful-stained-glass-window-with-white-and-pink-flowers-CKyuwIFbfR8
+
+PLACEHOLDERS STILL NEEDING REAL PHOTOS (marked 'Sample' on the site)
+    assets/images/about/founder-placeholder.svg  → real photo of Mr. Anthony Raj (about.php)
+    assets/images/gallery/master-*.jpg           → photos of his real paintings
+    assets/images/achievements/certificate-*.jpg, achiever-*.jpg, milestone-*.jpg → real certificates & student achievers

@@ -8,7 +8,7 @@ $page = [
     'path' => 'about.php',
     'footer' => 'pink',
     'og_image' => 'assets/images/about/studio.jpg',
-    'jsonld' => breadcrumb_jsonld([['Home', ''], ['About Us', 'about.php']]),
+    'crumbs' => [['Home', ''], ['About Us', 'about.php']],
 ];
 require __DIR__ . '/includes/header.php';
 $a = cfg('address');
@@ -20,7 +20,6 @@ $a = cfg('address');
     </div>
     <div class="container" style="position:relative">
         <div class="page-hero__copy" style="max-width:520px">
-            <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="index.php">Home</a></li><li aria-current="page">About Us</li></ol></nav>
             <h1 class="h-display">About Kalalaya<br>Fine Arts</h1>
             <span class="accent-rule" aria-hidden="true"></span>
             <p class="lead">Nurturing Creativity. Inspiring Confidence.<br>Building a Better Tomorrow Through Art.</p>
@@ -32,7 +31,7 @@ $a = cfg('address');
 <section class="section section--white story" id="our-story">
     <div class="container split">
         <div class="media-frame reveal">
-            <img src="assets/images/about/studio.jpg" width="698" height="484" alt="The bright Kalalaya Fine Arts studio with easels and student paintings" loading="lazy">
+            <img src="assets/images/about/studio.jpg" width="698" height="484" alt="A bright art studio with easels and paintings" loading="lazy">
         </div>
         <div class="reveal">
             <span class="eyebrow">Our Story</span>
@@ -48,13 +47,19 @@ $a = cfg('address');
 <!-- FOUNDER -->
 <section class="section section--tight founder" id="founder">
     <div class="container founder__grid">
-        <img class="reveal" src="assets/images/about/founder.jpg" width="482" height="380" alt="Mr. Anthony Raj, founder of Kalalaya Fine Arts, at his desk" loading="lazy">
+        <!-- PLACEHOLDER: replace with a real photo of Mr. Anthony Raj (save it as assets/images/about/founder.jpg and point this src at it). -->
+        <img class="reveal" src="assets/images/about/founder-placeholder.svg" width="482" height="380" alt="Photo of founder Mr. Anthony Raj coming soon" loading="lazy">
         <div class="reveal">
             <span class="eyebrow">Meet Our Founder</span>
             <h2 class="h-section">Mr. Anthony Raj, D.F.A., TTC.</h2>
             <p>Kalalaya Fine Arts was founded by Mr. Anthony Raj, D.F.A., TTC., an experienced art educator with more than 25 years of involvement in the field of art and creative education.</p>
             <p>He is a passionate artist, professional photographer and graphic designer who has played a vital role in encouraging students to focus on their individuality and creativity.</p>
             <p>His dedication to the art community has resulted in remarkable achievements, including five World Records for unique art attempts such as the largest bean mosaic and the largest national flag made of finger prints, as recognized by Asia Book of Records and Elite Records.</p>
+            <div class="founder-stats">
+                <div><strong data-count="25" data-suffix="+">25+</strong><span>Years in art education</span></div>
+                <div><strong data-count="5">5</strong><span>World records</span></div>
+                <div><strong data-count="2002" data-from="1990">2002</strong><span>Kalalaya founded</span></div>
+            </div>
         </div>
     </div>
 </section>

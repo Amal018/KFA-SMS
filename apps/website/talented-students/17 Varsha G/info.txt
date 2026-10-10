@@ -1,0 +1,5 @@
+Course: Professional Course
+Age: 19
+About: A dedicated student preparing for a career in art and design through structured, technical training.
+Quote: Skill Meets|Passion
+Pronoun: their

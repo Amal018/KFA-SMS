@@ -27,6 +27,11 @@ ErrorDocument 404 /404.php
     # Never serve dot-files or the includes folder
     RewriteRule (^|/)\.(?!well-known/) - [F,L]
     RewriteRule ^includes/ - [F,L]
+    RewriteRule ^private/ - [F,L]
+    RewriteRule ^blog-posts/ - [F,L]
+
+    # Always-current sitemap (lists new blog posts and student pages automatically)
+    RewriteRule ^sitemap\.xml$ sitemap.php [L]
 </IfModule>
 
 <IfModule mod_headers.c>
@@ -54,7 +59,7 @@ ErrorDocument 404 /404.php
 </IfModule>
 
 # Block access to text docs that are not meant to be public
-<FilesMatch "^(README\.txt)$">
+<FilesMatch "^(README\.txt|PHOTO-CREDITS\.txt)$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>

@@ -1,0 +1,5 @@
+# Posts are shown through blog.php — never serve the raw files.
+Require all denied
+<IfModule !mod_authz_core.c>
+Deny from all
+</IfModule>

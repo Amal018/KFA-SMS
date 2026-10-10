@@ -1,0 +1,5 @@
+Course: Painting
+Age: 12
+About: An enthusiastic painter exploring colour mixing, brushwork and composition across watercolour and acrylic.
+Quote: Colours of|My Imagination
+Pronoun: their
