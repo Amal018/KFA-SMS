@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /includes/
+Disallow: /submit-enquiry.php
+
+# Replace the domain below with your live domain
+Sitemap: https://www.kalalayafinearts.com/sitemap.xml

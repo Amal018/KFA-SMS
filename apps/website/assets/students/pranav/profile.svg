@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+<rect width="400" height="300" fill="hsl(59,70%,93%)"/>
+<g opacity=".5"><rect x="20" y="24" width="60" height="80" fill="hsl(99,70%,75%)"/><rect x="90" y="20" width="50" height="60" fill="hsl(179,60%,78%)"/><rect x="300" y="30" width="70" height="90" fill="hsl(259,60%,80%)"/><rect x="250" y="40" width="40" height="50" fill="hsl(139,65%,78%)"/></g>
+<circle cx="200" cy="150" r="78" fill="#fff"/><circle cx="200" cy="150" r="78" fill="none" stroke="#FF006E" stroke-width="3" stroke-dasharray="6 7"/>
+<text x="200" y="168" text-anchor="middle" font-family="Georgia,serif" font-size="52" fill="#252525">PK</text>
+<text x="200" y="272" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#555">Replace with student photo</text></svg>

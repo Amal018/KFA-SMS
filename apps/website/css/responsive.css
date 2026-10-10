@@ -1,0 +1,158 @@
+/* =====================================================================
+   KALALAYA FINE ARTS — RESPONSIVE RULES
+   Desktop-first. Breakpoints: 1280 · 1100 · 1024 (mobile nav) · 768 · 560 · 400
+   ===================================================================== */
+
+@media (max-width: 1180px) {
+    .category-cards { gap: 14px; }
+    .category-card__body { padding: 16px 12px 18px; }
+    .footer-grid--full { grid-template-columns: 1.1fr .8fr 1fr 1.3fr; }
+    .footer-grid--full .footer-map { grid-column: 1 / -1; max-width: 420px; }
+}
+
+@media (max-width: 1100px) {
+    .feature-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .category-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .student-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .showcase { grid-template-columns: 1fr; }
+    .cta-band__inner { grid-template-columns: auto 1px minmax(0, 1fr); }
+    .cta-band__inner > .btn-row { grid-column: 1 / -1; }
+    .cta-band__flourish { display: none; }
+    .profile { grid-template-columns: 200px minmax(0, 1fr); }
+    .profile__quote { grid-column: 1 / -1; justify-self: end; margin-top: -10px; }
+    .course-panel { grid-template-columns: minmax(0, 160px) minmax(0, 1fr); }
+}
+
+/* ---- Mobile navigation ---- */
+@media (max-width: 1024px) {
+    :root { --header-h: 68px; }
+    .topbar__list { font-size: 12px; }
+    .brand img { height: 52px; }
+    .header-cta { display: none; }
+    .nav-toggle { display: grid; }
+    .primary-nav {
+        position: fixed; top: 0; right: 0; bottom: 0; width: min(340px, 86vw);
+        background: #fff; z-index: 120; flex-direction: column; align-items: stretch;
+        padding: 88px 24px 32px; overflow-y: auto;
+        transform: translateX(100%); visibility: hidden;
+        transition: transform .3s var(--ease), visibility .3s;
+        box-shadow: -10px 0 40px rgba(0,0,0,.12);
+    }
+    .nav-open .primary-nav { transform: none; visibility: visible; }
+    .nav-open .nav-toggle { position: relative; z-index: 130; }
+    .nav-open .nav-toggle__open { display: none; }
+    .nav-open .nav-toggle__close { display: block; }
+    .nav-list { flex-direction: column; align-items: stretch; gap: 0; }
+    .nav-item { border-bottom: 1px solid var(--color-line-soft); }
+    .nav-item__row { justify-content: space-between; }
+    .nav-link { padding: 14px 0; font-size: 16px; display: block; flex: 1; }
+    .nav-link::after { display: none; }
+    .dropdown-toggle { width: 44px; height: 44px; }
+    .dropdown-toggle .icon { width: 18px; height: 18px; }
+    .dropdown {
+        position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; border: 0;
+        min-width: 0; padding: 0 0 10px 12px; display: none; background: transparent;
+    }
+    .has-dropdown.is-open .dropdown { display: block; }
+    .nav-mobile-cta { display: inline-flex; margin-top: 24px; }
+
+    .hero__grid, .page-hero__grid { grid-template-columns: 1fr; }
+    .hero__media, .page-hero__media { max-width: 640px; }
+    .hero-wide-media { position: relative; width: 100%; height: 260px; margin-top: 28px; }
+    .hero-wide-media img { -webkit-mask-image: none; mask-image: none; border-radius: var(--radius-lg); }
+    .split, .split--reverse, .visit__grid, .contact-main, .milestones, .achievers { grid-template-columns: 1fr; }
+    .split--reverse > :first-child { order: 2; }
+    .course-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .master-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .course-block { grid-template-columns: 1fr; }
+    .cert-carousel { grid-template-columns: auto minmax(0, 1fr) auto; }
+    .cert-side { display: none; }
+    .practice-banner { grid-template-columns: auto minmax(0, 1fr); }
+    .practice-banner .btn { grid-column: 1 / -1; justify-self: start; }
+    .footer-grid--full, .footer-grid--compact, .footer-grid--pink { grid-template-columns: 1fr 1fr; gap: 28px 0; }
+    .footer-grid--full { gap: 28px; }
+    .footer-grid > .footer-brand { grid-column: 1 / -1; padding-left: 0; }
+    .footer-grid--compact > *, .footer-grid--pink > * { padding: 0 20px 0 0; }
+    .footer-grid--compact .footer-col, .footer-grid--pink .footer-col { border-left: 0; }
+    .footer-grid--compact .footer-map { margin-left: 0; }
+    .footer-grid .footer-map { grid-column: 1 / -1; max-width: 420px; }
+    .footer-pink__cta { grid-column: 1 / -1; }
+    .footer-grid--simple { grid-template-columns: 1fr; justify-items: start; gap: 24px; }
+    .footer-inline { justify-content: flex-start; margin: 0; }
+    .footer-grid--simple .footer-contact { justify-self: start; }
+}
+
+@media (max-width: 768px) {
+    :root { --gutter: 20px; }
+    body { font-size: 15.5px; }
+    .topbar__list li { padding: 0 12px; }
+    .section-head--split { grid-template-columns: 1fr; gap: 14px; }
+    .section-head--split p { border-left: 0; padding-left: 0; }
+    .feature-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .category-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .student-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .artwork-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 24px; }
+    .founder__grid { grid-template-columns: 1fr; }
+    .founder__grid img { max-width: 320px; }
+    .showcase-gallery { grid-template-columns: 1fr; }
+    .showcase-gallery img { min-height: 0; aspect-ratio: 4 / 3; }
+    .cta-band__inner, .cta-band__inner--stack { grid-template-columns: 1fr; gap: 16px; }
+    .cta-band__divider { display: none; }
+    .cta-band__brush { width: 70px; opacity: .5; }
+    .cta-band__brush--l { top: auto; bottom: -10px; }
+    .cta-pink__inner { flex-direction: column; align-items: flex-start; }
+    .thumb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .collage { grid-template-columns: 1fr 1fr; grid-template-rows: none; height: auto; }
+    .collage li:nth-child(1) .thumb { grid-row: auto; grid-column: 1 / -1; }
+    .collage li:nth-child(4) .thumb, .collage li:nth-child(5) .thumb { grid-column: auto; }
+    .collage .thumb img { aspect-ratio: 3 / 2; height: auto; }
+    .collage li:nth-child(1) .thumb img { aspect-ratio: 4 / 3; }
+    .profile { grid-template-columns: 1fr; }
+    .profile__photo { max-width: 260px; }
+    .profile__quote { justify-self: start; transform: rotate(-5deg); margin-top: 6px; }
+    .events-empty { grid-template-columns: 1fr; }
+    .lightbox { padding: 64px 12px; }
+    .lightbox__nav { top: auto; bottom: 14px; transform: none; }
+    .lightbox__nav--prev { left: calc(50% - 56px); }
+    .lightbox__nav--next { right: calc(50% - 56px); }
+}
+
+@media (max-width: 560px) {
+    .topbar__list li:nth-child(2) { display: none; }
+    .hero-stats, .schedule, .contact-quick { flex-wrap: wrap; }
+    .schedule li, .contact-quick li { white-space: normal; }
+    .hero-stats li, .contact-quick li, .schedule li { padding: 8px 0; border-left: 0; width: 100%; }
+    .btn-row .btn { flex: 1 1 auto; }
+    .course-cards, .category-cards, .feature-cards { grid-template-columns: 1fr; }
+    .master-grid { gap: 16px; }
+    .category-card { flex-direction: row; }
+    .category-card img { width: 38%; aspect-ratio: auto; height: auto; min-height: 100%; }
+    .student-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .student-card .btn { width: 100%; padding: 0 8px; }
+    .artwork-grid { grid-template-columns: 1fr; }
+    .course-panel { grid-template-columns: 1fr; }
+    .course-panel img { min-height: 0; aspect-ratio: 16 / 10; height: auto; }
+    .course-panel__body { padding: 4px 6px 8px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-actions .btn { width: 100%; }
+    .footer-grid--full, .footer-grid--compact, .footer-grid--pink { grid-template-columns: 1fr; }
+    .map-overlay { position: relative; left: auto; top: auto; max-width: none; border-radius: 0; box-shadow: none; border-bottom: 1px solid var(--color-line-soft); }
+    .map-section .map-embed { height: auto; }
+    .map-section .map-embed iframe { height: 300px; }
+    .gallery-tabs .btn { min-width: 0; flex: 1; }
+    .whatsapp-float { width: 46px; height: 46px; right: 14px; bottom: 14px; }
+}
+
+@media (max-width: 400px) {
+    :root { --gutter: 16px; }
+    .topbar__list { font-size: 11px; }
+    .topbar__list li { padding: 0 9px; }
+    .brand img { height: 46px; }
+    .student-grid { gap: 10px; }
+    .student-card__body { padding: 12px 10px 14px; }
+    .student-card .meta { font-size: 11.5px; }
+    .meta .sep { margin: 0 5px; }
+    .category-card { flex-direction: column; }
+    .category-card img { width: 100%; aspect-ratio: 3 / 2; }
+    .h-display { font-size: 2.2rem; }
+}
